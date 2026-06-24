@@ -1,5 +1,5 @@
 # Uptime Kuma work set-up
-This was a project that I setup to monitor are servers and devices and notify if any interuptions happen.
+This was a project that I setup to monitor are servers and devices if interuptions happen it can notify me.
 
 ### The install
 When setting up on s windows server you need to check to see if Hyper-v is installed and avalible.
