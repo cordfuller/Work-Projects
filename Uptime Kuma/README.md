@@ -7,5 +7,4 @@ When setting up on s windows server you need to check to see if Hyper-v is insta
  -In powershell run the following commands to check requirments. 
 - Get-WindowsFeature -Name Hyper-v
  - system info
-
 At the bottom you should see if Hyper-V is ready for setup.
