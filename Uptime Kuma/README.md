@@ -18,8 +18,8 @@ Get-WindowsFeature -Name Hyper-V
 system info
 ```
 `Get-WindowsFeature` shows whether the role is **Installed** or just
-**Available**. In `systeminfo`, scroll to the bottom — the **Hyper-V
-Requirements** section should show all four items as **Yes** (VM Monitor
+**Available**. In `systeminfo`, scroll to the bottom of the **Hyper-V
+Requirements** This section should show all four items as **Yes** (VM Monitor
 Mode Extensions, Virtualization Enabled in Firmware, Second Level Address
 Translation, Data Execution Prevention).
 
