@@ -17,4 +17,12 @@ When setting up on a Windows Server, first check whether Hyper-v is avalible on 
 Get-WindowsFeature -Name Hyper-V
 system info
 ```
+`Get-WindowsFeature` shows whether the role is **Installed** or just
+**Available**. In `systeminfo`, scroll to the bottom — the **Hyper-V
+Requirements** section should show all four items as **Yes** (VM Monitor
+Mode Extensions, Virtualization Enabled in Firmware, Second Level Address
+Translation, Data Execution Prevention).
+
+
+
 At the bottom you should see if Hyper-V is ready for setup. After meeting all the requirments you can install your choice of OS for your VM, I will be using Ubuntu Server.
