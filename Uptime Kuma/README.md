@@ -19,7 +19,7 @@ A project that I setup to monitor our servers and devices if interruptions happe
 ```
                   
 ## The install
-When setting up on a Windows Server, first check whether Hyper-v is avalible on the host.
+When setting up on a Windows Server, first check whether Hyper-V is avalible on the host.
 
  -In powershell, run the following commands to check requirements. 
  ```
@@ -32,7 +32,33 @@ Requirements** This section should show all four items as **Yes** (VM Monitor
 Mode Extensions, Virtualization Enabled in Firmware, Second Level Address
 Translation, Data Execution Prevention).
 
-If Hyper-V shows as avalible and all the requirments are checked, then the host is ready. Run the following command.
+If Hyper-V shows as availble and all the requirements are checked, then the host is ready. Download your choice of server software, I will be using Ubuntu Server 20.04. Before installation I checked to see my NIC card. After location which port the NIC is using you need to create a external vswitch
+```
+Get-NetAdapter | Where-Object Status -eq 'Up'
+
+# Bind the switch.
+New-VMSwitch -Name "External-LAN" -NetAdapterName "<use-NIC-name>" -AllowManagementOS $true
+```
+After binding the vswitch you can check to make sure that it is active.
+
+### Create the VM.
+In powershell run the following commands to start mounting and creating you VM in Hyper-V
+```
+New-VM -Name "UptimeKuma" -MemoryStartupBytes 2GB -Generation 2 `
+  -NewVHDPath "C:\Hyper-V\UptimeKuma\UptimeKuma.vhdx" -NewVHDSizeBytes 20GB `
+  -SwitchName "External-LAN"
+
+Set-VM -Name "UptimeKuma" -ProcessorCount 2
+
+# Attach the ISO
+Add-VMDvdDrive -VMName "UptimeKuma" -Path "C:\<path-of-ISO"
+
+# Gen 2 needs Secure Boot set for Linux (Microsoft UEFI CA template)
+Set-VMFirmware -VMName "UptimeKuma" -SecureBootTemplate "MicrosoftUEFICertificateAuthority"
+
+# Make sure it boots from the DVD first
+$dvd = Get-VMDvdDrive -VMName "UptimeKuma"
+Set-VMFirmware -VMName "UptimeKuma" -FirstBootDevice $dvd
+```
 
 
-You can install your choice of OS for your VM, I will be using Ubuntu Server.
