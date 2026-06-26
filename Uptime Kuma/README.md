@@ -41,7 +41,7 @@ New-VMSwitch -Name "External-LAN" -NetAdapterName "<use-NIC-name>" -AllowManagem
 ```
 After binding the vswitch you can check to make sure that it is active.
 
-### Create the VM.
+### Create Ubuntu Server VM.
 In powershell run the following commands to start mounting and creating you VM in Hyper-V
 ```
 New-VM -Name "UptimeKuma" -MemoryStartupBytes 2GB -Generation 2 `
@@ -60,5 +60,55 @@ Set-VMFirmware -VMName "UptimeKuma" -SecureBootTemplate "MicrosoftUEFICertificat
 $dvd = Get-VMDvdDrive -VMName "UptimeKuma"
 Set-VMFirmware -VMName "UptimeKuma" -FirstBootDevice $dvd
 ```
+After creating the VM, start it and open the console:
 
+```powershell
+Start-VM -Name "UptimeKuma"
+vmconnect.exe localhost "UptimeKuma"
+```
+
+### Install Ubuntu Server
+
+Work through the installer. The settings that matter:
+
+- Set a **static IP** so the monitoring box never changes address. I used
+  172.21.0.34/16, gateway 172.21.0.1.
+- Check **Install OpenSSH server** so the VM can be managed remotely.
+- Use the entire disk with LVM. Leave LUKS encryption **off** — a monitoring
+  box needs to reboot on its own, and LUKS would stop boot to ask for a
+  passphrase.
+- Don't select any of the featured snaps. Docker gets installed separately.
+
+One thing worth doing before installing: verify the ISO. I checked the
+SHA256 of the download against Canonical's published checksum. My first
+download didn't match, so I re-downloaded and re-checked before installing.
+
+```powershell
+Get-FileHash "C:\ISOs\ubuntu-24.04.4-live-server-amd64.iso" -Algorithm SHA256
+```
+
+### Install Docker and Uptime Kuma
+
+After Ubuntu reboots, log in and update the system:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+Install Docker:
+Install Docker with the following command and create a user name.
+```bash
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker cord
+```
+
+Reboot the VM so the group change takes effect, then run
+Uptime Kuma:
+
+```bash
+docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:2
+```
+
+Kuma is now running. Reach the dashboard from any machine on the network at
+`http://172.21.0.34:3001` and create the admin account on first load.
 
