@@ -76,6 +76,8 @@ vmconnect.exe localhost "UptimeKuma"
 
 Work through the installer. The settings that matter:
 
+<img width="782" height="227" alt="image" src="https://github.com/user-attachments/assets/fd779b38-bd47-44ee-8a80-9e841d4c06c2" />
+
 - Set a **static IP** so the monitoring box never changes address. I used
   172.21.0.34/16, gateway 172.21.0.1.
 - Check **Install OpenSSH server** so the VM can be managed remotely.
@@ -116,5 +118,6 @@ docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name upti
 ```
 
 Kuma is now running. Reach the dashboard from any machine on the network at
-`http://172.21.0.34:3001` and create the admin account on first load.
+`<ip-address-you-picked>` and create the admin account on first load.
 
+<img width="1915" height="945" alt="Screenshot_20260626_143818" src="https://github.com/user-attachments/assets/c1575880-791d-4baa-b508-3fe5a089973d" />
