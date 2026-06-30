@@ -112,4 +112,3 @@ docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name upti
 Kuma is now running. Reach the dashboard from any machine on the network at
 `http://172.21.0.34:3001` and create the admin account on first load.
 
-<img width="1915" height="945" alt="Screenshot_20260626_143818" src="https://github.com/user-attachments/assets/7c0e1a66-1ef1-4649-9695-40ef35ba52f5" />
