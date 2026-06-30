@@ -26,12 +26,13 @@ When setting up on a Windows Server, first check whether Hyper-V is avalible on 
 Get-WindowsFeature -Name Hyper-V
 system info
 ```
+<img width="796" height="93" alt="Screenshot_20260624_101630" src="https://github.com/user-attachments/assets/4795f914-3529-478f-bf0d-3d5f55e50014" />
 `Get-WindowsFeature` shows whether the role is **Installed** or just
 **Available**. In `systeminfo` scroll to the bottom of the **Hyper-V
 Requirements** This section should show all four items as **Yes** (VM Monitor
 Mode Extensions, Virtualization Enabled in Firmware, Second Level Address
 Translation, Data Execution Prevention).
-
+<img width="493" height="58" alt="Screenshot_20260624_101409" src="https://github.com/user-attachments/assets/43f66821-d9af-41ff-85a9-1dd13b147f4d" />
 If Hyper-V shows as availble and all the requirements are checked, then the host is ready. Download your choice of server software, I will be using Ubuntu Server 20.04. Before installation I checked to see my NIC card. After location which port the NIC is using you need to create a external vswitch
 ```
 Get-NetAdapter | Where-Object Status -eq 'Up'
@@ -86,6 +87,7 @@ download didn't match, so I re-downloaded and re-checked before installing.
 ```powershell
 Get-FileHash "C:\ISOs\ubuntu-24.04.4-live-server-amd64.iso" -Algorithm SHA256
 ```
+<img width="1026" height="875" alt="image" src="https://github.com/user-attachments/assets/27aabb62-dc2b-4a02-a963-cbc165a9c9fa" />
 
 ### Install Docker and Uptime Kuma
 
