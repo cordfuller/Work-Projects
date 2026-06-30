@@ -1,4 +1,4 @@
-# Uptime Kuma work set-up
+# Uptime Kuma Work set-up
 ## Why I Built This
 We lost internet for a few minutes one day. When I asked a coworker if he had
 noticed, he had no idea it had even happened. I wanted a way
@@ -24,7 +24,7 @@ When setting up on a Windows Server, first check whether Hyper-V is avalible on 
  -In powershell, run the following commands to check requirements. 
  ```
 Get-WindowsFeature -Name Hyper-V
-system info
+systeminfo
 ```
 
 <img width="796" height="93" alt="Screenshot_20260624_101630" src="https://github.com/user-attachments/assets/4795f914-3529-478f-bf0d-3d5f55e50014" />
@@ -45,6 +45,9 @@ Get-NetAdapter | Where-Object Status -eq 'Up'
 New-VMSwitch -Name "External-LAN" -NetAdapterName "<use-NIC-name>" -AllowManagementOS $true
 ```
 After binding the vswitch you can check to make sure that it is active.
+```
+Get-VMSwitch
+```
 
 ### Create Ubuntu Server VM.
 In powershell run the following commands to start mounting and creating you VM in Hyper-V
@@ -67,10 +70,19 @@ Set-VMFirmware -VMName "UptimeKuma" -FirstBootDevice $dvd
 ```
 After creating the VM, start it and open the console:
 
-```powershell
+```
 Start-VM -Name "UptimeKuma"
 vmconnect.exe localhost "UptimeKuma"
 ```
+### Verify the ISO 
+One thing worth doing before installing is verify the ISO. I checked the
+SHA256 of the download against Canonical's published checksum. My first
+download didn't match, during the install my download got corrupted, so I redownloaded and rechecked before installing and it passed.
+
+```
+Get-FileHash "C:\ISOs\ubuntu-24.04.4-live-server-amd64.iso" -Algorithm SHA256
+```
+<img width="1026" height="875" alt="image" src="https://github.com/user-attachments/assets/27aabb62-dc2b-4a02-a963-cbc165a9c9fa" />
 
 ### Install Ubuntu Server
 
@@ -83,27 +95,19 @@ Work through the installer. The settings that matter:
 - Check **Install OpenSSH server** so the VM can be managed remotely.
 - Use the entire disk with LVM. 
 - Don't select any of the featured snaps. Docker gets installed separately.
-
-One thing worth doing before installing: verify the ISO. I checked the
-SHA256 of the download against Canonical's published checksum. My first
-download didn't match, during the install my download got corrupted, so I redownloaded and rechecked before installing.
-
-```powershell
-Get-FileHash "C:\ISOs\ubuntu-24.04.4-live-server-amd64.iso" -Algorithm SHA256
-```
+- 
 <img width="1026" height="875" alt="image" src="https://github.com/user-attachments/assets/27aabb62-dc2b-4a02-a963-cbc165a9c9fa" />
 
 ### Install Docker and Uptime Kuma
 
 After Ubuntu reboots, log in and update the system:
 
-```bash
+```
 sudo apt update && sudo apt upgrade -y
 ```
 
-Install Docker:
 Install Docker with the following command and create a user name.
-```bash
+```
 curl -fsSL https://get.docker.com | sh
 sudo usermod -aG docker cord
 ```
@@ -116,9 +120,13 @@ docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name upti
 ```
 
 Kuma is now running. Reach the dashboard from any machine on the network at
-`<ip-address-you-picked>` and create the admin account on first load.
+`<ip>:3001` and create the admin account on first load.
 
 <img width="1915" height="945" alt="Screenshot_20260626_143818" src="https://github.com/user-attachments/assets/c1575880-791d-4baa-b508-3fe5a089973d" />
 
+# Wrap up
+Uptime Kuma is an amazing tool that can help you monitor your work or home network. There are a ton of features for monitoring devices, database servers, port monitoring, DNS Records, and much more. You can also set up notifications for 70+ services.
 
-Uptime Kuma is an amazing tool that can help you monitor your work or home network with a ton of features. There are a ton of features for monitoring devices, database servers, port monitoring, DNS Records, and mucjh more.
+The one real shortcoming is if your ISP goes down, the whole stack is sitting behind the dead connection, so it can't actually reach out to notify you. To counter that, I plan on renting a $5/month VPS service down the road to monitor our servers externally so that way the monitoring lives outside the network it's watching.
+
+This was a fun project that I really enjoyed, and I'll be using it on my own home network too.
