@@ -78,17 +78,15 @@ Work through the installer. The settings that matter:
 
 <img width="782" height="227" alt="image" src="https://github.com/user-attachments/assets/fd779b38-bd47-44ee-8a80-9e841d4c06c2" />
 
-- Set a **static IP** so the monitoring box never changes address. I used
+- Set a **static IP** so the VM never changes address. I used
   172.21.0.34/16, gateway 172.21.0.1.
 - Check **Install OpenSSH server** so the VM can be managed remotely.
-- Use the entire disk with LVM. Leave LUKS encryption **off** — a monitoring
-  box needs to reboot on its own, and LUKS would stop boot to ask for a
-  passphrase.
+- Use the entire disk with LVM. 
 - Don't select any of the featured snaps. Docker gets installed separately.
 
 One thing worth doing before installing: verify the ISO. I checked the
 SHA256 of the download against Canonical's published checksum. My first
-download didn't match, so I re-downloaded and re-checked before installing.
+download didn't match, during the install my download got corrupted, so I redownloaded and rechecked before installing.
 
 ```powershell
 Get-FileHash "C:\ISOs\ubuntu-24.04.4-live-server-amd64.iso" -Algorithm SHA256
@@ -121,3 +119,6 @@ Kuma is now running. Reach the dashboard from any machine on the network at
 `<ip-address-you-picked>` and create the admin account on first load.
 
 <img width="1915" height="945" alt="Screenshot_20260626_143818" src="https://github.com/user-attachments/assets/c1575880-791d-4baa-b508-3fe5a089973d" />
+
+
+Uptime Kuma is an amazing tool that can help you monitor your work or home network with a ton of features. There are a ton of features for monitoring devices, database servers, port monitoring, DNS Records, and mucjh more.
